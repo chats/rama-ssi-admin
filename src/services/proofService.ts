@@ -1,0 +1,118 @@
+import { ProofRequestDocument } from "@/types/proof.types";
+import { DEFAULT_SCHEMA_URI } from "@/types/schema.types";
+import { v4 as uuidv4 } from "uuid";
+import { apiService } from "./api";
+
+const ProofService = {
+  /**
+   * Create proof request body
+   */
+  createProofRequestBody: (
+    connectionId: string,
+    proofRequestConfig: ProofRequestDocument
+  ) => {
+    return {
+      connection_id: connectionId,
+      presentation_request: {
+        dif: {
+          options: {
+            challenge: uuidv4(),
+            domain: "4jt78h47fh47",
+          },
+          presentation_definition: {
+            id: uuidv4(),
+            format: {
+              ldp_vp: {
+                proof_type: [...proofRequestConfig.proofType],
+              },
+            },
+            input_descriptors: proofRequestConfig.attributes.map((attr) => ({
+              id: `${attr.name}_id`,
+              name: attr.name,
+              purpose: attr.purpose,
+              schema: [
+                {
+                  uri: DEFAULT_SCHEMA_URI,
+                },
+                {
+                  uri: proofRequestConfig.schemaUri,
+                },
+              ],
+              constraints: {
+                fields: [
+                  {
+                    path: attr.path,
+                    ...(attr.pattern && {
+                      filter: {
+                        type: "string",
+                        pattern: attr.pattern,
+                      },
+                    }),
+                    purpose: attr.purpose,
+                  },
+                ],
+              },
+            })),
+          },
+        },
+      },
+      trace: false,
+    };
+  },
+
+  createProofProposalDocument: (connectionId: string, proposal: unknown) => {
+    return {connectionId, proposal}; //FIX this
+  },
+
+  /**
+   * (Verifier) Send proof request to holder
+   */
+  sendProofRequest: async (connectionId: string, proofRequestConfig: ProofRequestDocument) => {
+    const requestBody = ProofService.createProofRequestBody(connectionId, proofRequestConfig);
+    const { data } = await apiService.post('/present-proof-2.0/send-reques', requestBody);
+    return data;
+  },
+
+  /**
+   * (Holders) Send proof to verifier
+   */
+  sendProposal: async (connectionId: string, proofProposalDocument: unknown) => {
+    const requestBody = ProofService.createProofProposalDocument(connectionId, proofProposalDocument);
+    const { data } = await apiService.post('/present-proof-2.0/send-proposal', requestBody);
+    return data;
+  },
+
+
+  sendPresentation: async (presExId: string, presentationDocument: unknown) => {
+    const { data } = await apiService.post(`/present-proof-2.0/records/${presExId}/send-presentation`, {
+      presentation: presentationDocument,
+    });
+    return data;
+  },
+
+  verifyPresentation: async (presExId: string) => {
+    const { data } = await apiService.post(`/present-proof-2.0/records/${presExId}/verify-presentation`);
+    return data;
+  },
+
+
+  getRecords: async (options: unknown) => {
+    const { data } = await apiService.get('/present-proof-2.0/records', {
+      params: options,
+    });
+    return data;
+  },
+  
+  getRecordById: async (presExId: string) => {
+    const { data } = await apiService.get(`/present-proof-2.0/records/${presExId}`);
+    return data;
+  },
+
+  deleteRecord: async (presExId: string) => {
+    const { data } = await apiService.delete(`/present-proof-2.0/records/${presExId}`);
+    return data;
+  },
+
+};
+
+export default ProofService;
