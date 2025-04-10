@@ -1,0 +1,42 @@
+version: '3.8'
+
+services:
+  # React application
+  rama-ssi-admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        - VITE_API_BASE_URL=${VITE_API_BASE_URL:-https://api.example.com}
+    ports:
+      - "8080:80"
+    restart: unless-stopped
+    environment:
+      - NODE_ENV=production
+    networks:
+      - rama-network
+
+  # Optional: Add a development service with hot reloading
+  rama-ssi-admin-dev:
+    image: node:20-alpine
+    working_dir: /app
+    volumes:
+      - .:/app
+      - node_modules:/app/node_modules
+    ports:
+      - "5173:5173"
+    environment:
+      - NODE_ENV=development
+      - VITE_API_BASE_URL=${VITE_API_BASE_URL:-http://localhost:3000}
+    command: sh -c "npm install && npm run dev -- --host"
+    networks:
+      - rama-network
+    profiles:
+      - dev
+
+networks:
+  rama-network:
+    driver: bridge
+
+volumes:
+  node_modules:
