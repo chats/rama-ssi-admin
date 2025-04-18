@@ -3,7 +3,7 @@ import { DEFAULT_SCHEMA_URI } from "@/types/schema.types";
 import { v4 as uuidv4 } from "uuid";
 import { apiService } from "./api";
 
-const ProofService = {
+const ProofServiceOld = {
   /**
    * Create proof request body
    */
@@ -115,4 +115,4 @@ const ProofService = {
 
 };
 
-export default ProofService;
+export default ProofServiceOld;

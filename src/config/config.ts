@@ -1,11 +1,8 @@
 import { Agent, AgentRoles } from '@/types/agent.types';
 
-const baseApiUrl = import.meta.env.VITE_BASE_API_URL || 'http://localhost:9000';
-const issuerUrl = baseApiUrl+'/issuer-api';
-const holderUrl = baseApiUrl+'/holder-api';
-const verifierUrl = baseApiUrl+'/verifier-api';
-const multitenantUrl = baseApiUrl+'/multitenant-api';
-const adminUrl = baseApiUrl+'/admin-api';
+const issuerUrl = import.meta.env.VITE_ISSUER_API_URL;
+const holderUrl = import.meta.env.VITE_HOLDER_API_URL;
+const verifierUrl = import.meta.env.VITE_VERIFIER_API_URL;
 
 export const IssuerAgent: Agent = {
     name: 'Issuer Agent',
@@ -13,6 +10,8 @@ export const IssuerAgent: Agent = {
     wssUrl: issuerUrl.replace('http', 'ws').replace('https', 'wss')+'/ws',
     apiKey: import.meta.env.VITE_ISSUER_API_KEY,
     role: AgentRoles.ISSUER,
+    didSov: import.meta.env.VITE_ISSUER_DID_SOV,
+    didKey: import.meta.env.VITE_ISSUER_DID_KEY,
 }
 
 export const HolderAgent: Agent = {
@@ -21,28 +20,16 @@ export const HolderAgent: Agent = {
     wssUrl: holderUrl.replace('http', 'ws').replace('https', 'wss')+'/ws',
     apiKey: import.meta.env.VITE_HOLDER_API_KEY,
     role: AgentRoles.HOLDER,
+    didSov: import.meta.env.VITE_HOLDER_DID_SOV,
+    didKey: import.meta.env.VITE_HOLDER_DID_KEY,
 }
 
 export const VerifierAgent: Agent = {
     name: 'Verifier Agent',
     apiUrl: verifierUrl,
     wssUrl: verifierUrl.replace('http', 'ws').replace('https', 'wss')+'/ws',
-    apiKey: import.meta.env.VITE_VERIFIER_API_KEY || 'verifier_api_key',
+    apiKey: import.meta.env.VITE_VERIFIER_API_KEY,
     role: AgentRoles.VERIFIER,
-}
-
-export const MultitenantAgent = {
-    name: 'Multitenant Agent',
-    apiUrl: multitenantUrl,
-    wssUrl: multitenantUrl.replace('http', 'ws').replace('https', 'wss')+'/ws',
-    apiKey: import.meta.env.VITE_MULTITENANT_API_KEY || 'multi_api_key',
-    role: AgentRoles.MULTITENANT,
-}
-
-export const AdminAgent = {
-    name: 'Admin Agent',
-    apiUrl: adminUrl,
-    wssUrl: adminUrl.replace('http', 'ws').replace('https', 'wss')+'/ws',
-    apiKey: import.meta.env.VITE_ADMIN_API_KEY || 'admin_api_key',
-    role: AgentRoles.ADMIN,
+    didSov: import.meta.env.VITE_VERIFIER_DID_SOV,
+    didKey: import.meta.env.VITE_VERIFIER_DID_KEY,
 }

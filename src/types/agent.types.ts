@@ -12,4 +12,8 @@ export interface Agent {
     apiKey: string;
     wssUrl: string;
     role?: AgentRoles;
+    didSov: string;
+    didKey: string;
+//    theirDid?: string;
+//    connectionId?: string;
 }

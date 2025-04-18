@@ -1,14 +1,22 @@
 import React from 'react'
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
-import AuthLayout from './components/layout/AuthLayout'
 import PublicLayout from './components/layout/PublicLayout'
 import LoginPage from './pages/auth/LoginPage'
 import DashboardPage from './pages/dashboard/DashboardPage'
-import ConnectionsPage from './pages/connections/ConnectionsPage'
-import CredentialsPage from './pages/credentials/CredentialsPage'
 import VerificationsPage from './pages/verifications/VerificationsPage'
 import ProfilePage from './pages/profile/ProfilePage'
 import SettingsPage from './pages/settings/SettingsPage'
+import TestOfferPage from './pages/credentials/TestOfferPage'
+import HolderConnectionPage from './pages/connections/HolderConnectionPage'
+import VerifierConnectionPage from './pages/connections/VerifierConnectionPage'
+import IssuerConnectionPage from './pages/connections/IssuerConnectionPage'
+import VerificationsDemoPage from './pages/verifications/VerificationsDemoPage'
+import IssuedCredentialRecordPage from './pages/credentials/IssuedCredentialRecordPage'
+import LoadingDemo from './pages/demo/LoadingDemo'
+import ProofRecordPage from './pages/credentials/ProofRecordPage'
+import AuthLayout from './components/layout/AuthLayout'
+import OfferMedicalCertPage from './pages/issue-credential/OfferMedicalCertPage'
+import CredentialsPage from './pages/credentials/CredentialsPage'
 
 const App: React.FC = () => {
   // Simple authentication check
@@ -36,11 +44,27 @@ const App: React.FC = () => {
           }
         >
           <Route path="/dashboard" element={<DashboardPage/>} />
-          <Route path="/connections" element={<ConnectionsPage/>} />
-          <Route path="/credentials" element={<CredentialsPage/>} />
-          <Route path="/verifications" element={<VerificationsPage/>} />
+          <Route path="/connections">
+            <Route path="issuer" element={<IssuerConnectionPage/>} />
+            <Route path="holder" element={<HolderConnectionPage />} />
+            <Route path="verifier" element={<VerifierConnectionPage />} />
+          </Route>
+          <Route path="/credentials">
+            <Route path="issued" element={<IssuedCredentialRecordPage />} />
+            <Route path="proofs" element={<ProofRecordPage />} />
+            <Route path="holder" element={<CredentialsPage/>} />
+          </Route>
+          <Route path="/issue-credential">
+            <Route path="offer-medical-cert" element={<OfferMedicalCertPage/>} />
+          </Route>
+          <Route path="/present-proof">
+            <Route path="verifications-demo" element={<VerificationsDemoPage/>} />
+            <Route path="verifications" element={<VerificationsPage/>} />
+          </Route>
+
           <Route path="/profile" element={<ProfilePage/>} />
           <Route path="/settings" element={<SettingsPage/>} />
+          <Route path="/demo/loading" element={<LoadingDemo/>} />
         </Route>
 
         {/* Default redirect */}

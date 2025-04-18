@@ -29,3 +29,8 @@ export interface ConnectionFilterOptions {
     their_public_did?: string;
     their_role?: string;
 }
+
+
+export interface Connection {
+    id: string;
+}

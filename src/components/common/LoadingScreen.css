@@ -1,0 +1,24 @@
+.fullscreen-spinner {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.65);
+  z-index: 1000;
+}
+
+.ant-spin-text {
+  margin-top: 8px;
+  font-size: 14px;
+}
+
+/* For spinning container */
+.loading-container {
+  position: relative;
+  min-height: 80px;
+  width: 100%;
+}

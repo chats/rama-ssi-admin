@@ -13,45 +13,47 @@ class ConnectionService {
   };
 
   constructor(agent: Agent) {
-    this.api = new ApiService(agent.apiUrl, agent.apiKey);
+    this.api = new ApiService(agent);
   }
 
   async createInvitation(): Promise<unknown> {
+    console.log("Creating invitation with body: ", this.invitationBody);
+
     const response = await this.api.post(`/out-of-band/create-invitation`, {
       ...this.invitationBody,
     });
-    return response;
+    return response.data;
   }
 
   async acceptInvitation(invitation: string): Promise<unknown> {
     const response = await this.api.post(`/out-of-band/receive-invitation`, {
       invitation,
     });
-    return response;
+    return response.data;
   }
 
   async deleteInvitation(inviMsgId: string): Promise<unknown> {
     const response = await this.api.delete(`/out-of-band/invitations/${inviMsgId}`);
-    return response;
+    return response.data;
   }
 
-  async getConnections(filterOptions: ConnectionFilterOptions): Promise<unknown> {
+  async getConnections(filterOptions?: ConnectionFilterOptions): Promise<unknown> {
     const response = await this.api.get(`/connections`, {
       params: {
         ...filterOptions,
       },
     });
-    return response;
+    return response.data;
   }
 
   async getConnectionById(connectionId: string): Promise<unknown> {
     const response = await this.api.get(`/connections/${connectionId}`);
-    return response;
+    return response.data;
   }
 
   async deleteConnection(connectionId: string): Promise<unknown> {
     const response = await this.api.delete(`/connections/${connectionId}`);
-    return response;
+    return response.data;
   }
 }
 
